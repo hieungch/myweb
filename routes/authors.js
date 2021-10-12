@@ -43,6 +43,7 @@ router.post("/", async (req, res) => {
 
   author.save((err, newAuthor) => {
     if (err) {
+      console.log(err);
       res.render("authors/new", {
         author: author,
         errorMessage: "Error in creating Author",

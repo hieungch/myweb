@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 const authorSchema = new mongoose.Schema({
-  nane: {
+  name: {
     type: String,
     required: true,
   },
