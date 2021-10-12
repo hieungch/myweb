@@ -7,13 +7,17 @@
     <title>Mylibrary</title>
 </head>
 <body>
-    Before
     <!--the < %- body %> enable the ability to include all pages to this body -->
     <br>
     <!--middle -->
+    <%- 
+    include("../partials/header.ejs") 
+    %> 
+    <%- 
+    include("../partials/errorMessage.ejs") 
+    %> 
     <%- body %>
-    <br>
-    After
+   
 
 </body>
 </html>
