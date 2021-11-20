@@ -42,18 +42,15 @@ app.use(passport.session());
 
 const initializePassport = require("./passport-config");
 
-initializePassport(
-  passport,
-  (email) => User.findOne(User.email === email),
-  (id) => User.findOne(User.id === id)
-);
+initializePassport(passport);
 
-app.get("/login", (req, res) => {
+app.get("/login", checkNotAuthenticated, (req, res) => {
   res.render("login.ejs");
 });
 
 app.post(
   "/login",
+  checkNotAuthenticated,
   passport.authenticate("local", {
     successRedirect: "/",
     failureRedirect: "/login",
@@ -61,11 +58,11 @@ app.post(
   })
 );
 
-app.get("/register", (req, res) => {
+app.get("/register", checkNotAuthenticated, (req, res) => {
   res.render("register.ejs");
 });
 
-app.post("/register", async (req, res) => {
+app.post("/register", checkNotAuthenticated, async (req, res) => {
   try {
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
     const newUser = new User({
@@ -93,5 +90,17 @@ db.once("open", () => console.log("connected to mongodb sucessfully!"));
 app.use("/", indexRouter);
 app.use("/authors", authorRouter);
 app.use("/books", bookRouter);
+
+app.delete("/logout", (req, res) => {
+  req.logOut();
+  res.redirect("/login");
+});
+
+function checkNotAuthenticated(req, res, next) {
+  if (req.isAuthenticated()) {
+    return res.redirect("/");
+  }
+  next();
+}
 
 app.listen(process.env.PORT || 3000);
